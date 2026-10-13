@@ -60,7 +60,8 @@ begin
    if coalesce(p_data->>'subject','') not in ('slo','mat','fiz','ang','nem','rač','rso','ele','esi','psim','fizm','zgom','špo')
      or coalesce(p_data->>'type','') not in ('pisno','ustno','izdelek')
      or coalesce(p_data->>'value','') not in ('1','2','3','4','5')
-     or coalesce(p_data->>'date','') !~ '^[0-9]{4}-[0-9]{2}-[0-9]{2}   then return '{"ok":false,"message":"Neveljavni podatki ocene."}'::jsonb; end if;
+     or coalesce(p_data->>'date','') !~ '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'
+   then return '{"ok":false,"message":"Neveljavni podatki ocene."}'::jsonb; end if;
    if p_action='insert' then
      insert into g4a_private.grades(owner_id,subject,type,value,date)
      values(uid,p_data->>'subject',p_data->>'type',(p_data->>'value')::smallint,(p_data->>'date')::date)
