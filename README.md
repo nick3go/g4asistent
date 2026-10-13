@@ -34,3 +34,11 @@ Za manj pomembne šolske podatke uporablja aplikacija preprosto primerjavo upora
 ### Povprečja
 
 Podprti so predmeti `slo, mat, fiz, ang, nem, rač, rso, ele, esi, psim, fizm, zgom, špo`. Ocene so od 1 do 5, vrste so pisno, ustno in izdelek. Skupno povprečje je povprečje nezaokroženih povprečij **predmetov z ocenami**; prikaz je na dve decimalki.
+
+## Nadgradnja v2 (procenti in popravljene ocene)
+
+Če imaš G4Asistent že povezan s Supabase, v SQL Editorju projekta izvedi **samo [g4a-upgrade-v2.sql](g4a-upgrade-v2.sql)**. Skripta v `g4a_private.grades` doda stolpca `percent` in `correction_of`, prilagodi funkcijo `public.g4a_api` in ohrani vse obstoječe uporabnike ter ocene. Timeline uporablja drugo shemo, zato ga ta migracija ne spreminja.
+
+Procenti so neobvezni (0–100). Pri popravljanju izberi obstoječo oceno iz istega predmeta in dodaj novo; prvotna in popravljena ostaneta vidni. Za povprečje šteje večja od obeh. Vsako izvirno oceno je mogoče popraviti največ enkrat. Negativne ocene, ki so bile popravljene na 2 ali več, niso navedene med »Za popravit«. Tudi če je bil popravni poskus slabši, za povprečje ostane boljša ocena.
+
+Prikaz predmetov vključuje samo tiste z ocenami. Vrstni red: slo, mat, ang, nem, fiz, rač, rso, ele, esi, špo, fizm, psim, zgom. Kartični in kompaktni pogled uporabljata iste podatke; gumb za urejanje in brisanje se pokaže po kliku na oceno.
