@@ -5,6 +5,23 @@
 .compact-grade{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap}.compact-grade .grade-actions{flex-basis:100%}.compact-grade .grade-info{flex-basis:100%}.grade-number.original-replaced{opacity:.5;text-decoration:line-through}
 .view-tabs{display:flex;gap:6px}.view-btn{font-size:12px;padding:8px 11px}.view-btn.active{background:var(--accent);color:#101522;border-color:var(--accent)}.fix-box{border:1px solid #754951;background:#311c25;border-radius:16px;padding:15px 20px;margin:0 0 24px;display:flex;align-items:center;flex-wrap:wrap;gap:12px}.fix-box strong{color:#ffadb5}.fix-box span{display:inline-block;margin:3px 7px 3px 0;background:#5b303b;border-radius:9px;padding:5px 9px}.grade{flex-wrap:wrap;cursor:pointer;border-radius:8px}.grade:focus-visible{outline:2px solid var(--accent)}.grade .grade-actions{display:none;width:100%;justify-content:flex-end;gap:7px}.grade.expanded .grade-actions{display:flex}.grade.original-replaced .grade-number,.compact-chip.original-replaced{opacity:.5;text-decoration:line-through}.compact-list{display:block}.compact-row{display:flex;align-items:flex-start;gap:12px;border-bottom:1px solid var(--line);padding:15px 4px;flex-wrap:wrap}.compact-row>strong{min-width:185px}.compact-grades{display:flex;gap:7px;flex:1;flex-wrap:wrap}.compact-chip{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:5px 9px;color:var(--text)}.compact-chip:focus-visible{outline:2px solid var(--accent)}.compact-row .avg{margin-left:auto}.grade small{font-size:12px}.grade-info small{line-height:1.5}.correction-marker{color:var(--accent);font-size:11px}.subject .empty{padding:10px}
 .action-small{border:1px solid var(--line);background:#242c3d;border-radius:8px;color:var(--text);padding:6px 9px;font-size:12px;font-weight:600;white-space:nowrap;line-height:1.3}.action-small:hover{background:#354058}.action-small.fix-action{color:#c0c9ff}.grade-actions{align-items:center;flex-wrap:wrap}.compact-grade .grade-actions{display:none}.compact-grade.expanded .grade-actions{display:flex}.compact-grade.expanded{padding:5px 7px;border-radius:10px;background:var(--panel2)}.compact-grade.expanded .grade-actions{width:100%;justify-content:flex-start;gap:5px}.correction-context{grid-column:1/-1;background:#252f48;border:1px solid #485b87;border-radius:10px;padding:10px 12px;color:#cdd5ff;font-size:13px;margin-top:14px}@media(max-width:720px){.compact-row>strong{min-width:0}.compact-grade.expanded{flex-basis:100%}.compact-grade .grade-actions{gap:5px}.action-small{padding:6px 8px;font-size:12px}}
+
+/* Consistent three-column list: subject | textual grades | average */
+.compact-row{display:grid;grid-template-columns:minmax(150px,215px) minmax(0,1fr) auto;align-items:center;gap:14px;padding:14px 6px;flex-wrap:initial}
+.compact-row>div:first-child{min-width:0}
+.compact-row h3{font-size:15px;line-height:1.35;font-weight:650;margin:0}
+.compact-grades{display:flex;flex-wrap:wrap;align-items:center;gap:3px 5px;min-width:0}
+.compact-grade{display:inline-flex;align-items:center;gap:2px;position:relative;flex-wrap:nowrap}
+.compact-chip{appearance:none;border:0;border-radius:5px;background:transparent;color:var(--text);font:inherit;font-size:16px;font-weight:550;line-height:1.5;padding:2px 3px;min-width:20px}
+.compact-chip:hover,.compact-grade.expanded .compact-chip{background:var(--panel2)}
+.compact-grade:not(:last-child):not(.expanded)::after{content:",";color:var(--muted);margin-right:2px}
+.compact-chip.original-replaced{opacity:.48;text-decoration:line-through}
+.compact-row .avg{font-size:14px;padding:6px 9px;margin:0;white-space:nowrap}
+.compact-grade.expanded{background:var(--panel2);padding:2px 5px;flex-wrap:wrap;z-index:1}
+.compact-grade.expanded .grade-info,.compact-grade.expanded .grade-actions{flex-basis:100%}
+.compact-grade.expanded .grade-info{display:block!important}
+.compact-grade.expanded .grade-actions{display:flex;gap:5px;justify-content:flex-start}
+@media(max-width:650px){.compact-row{grid-template-columns:minmax(0,1fr) auto;gap:6px 10px;padding:13px 2px}.compact-row>div:first-child{grid-column:1;grid-row:1}.compact-row .avg{grid-column:2;grid-row:1;font-size:13px}.compact-grades{grid-column:1/-1;grid-row:2;gap:2px 4px}.compact-row h3{font-size:15px}.compact-chip{font-size:16px;padding:3px 4px}}
 </style></head><body>
 <div class="wrap"><header><div class="logo"><div class="mark">G4</div>Asistent<span class="muted">/ ocene</span></div><div class="top-right"><span id="username" class="muted hidden"></span><button id="logout" class="btn ghost hidden">Odjava</button></div></header>
 <div id="setup" class="setup hidden">Povezava s podatkovno bazo še ni nastavljena. Navodila so v datoteki README.md.</div>
