@@ -1,6 +1,5 @@
-// Javni Supabase URL in publishable/anon ključ. To NISTA skrivnosti.
-// Nikoli sem ne prilepi service_role oziroma secret ključa!
+// Public Supabase client configuration. Never place secret/service_role keys here.
 window.G4_CONFIG = {
-  url: "TVOJ_SUPABASE_URL",
-  anonKey: "TVOJ_SUPABASE_PUBLISHABLE_ALI_ANON_KLJUC"
+  url: "https://ngtkrtabbxrwduleenwn.supabase.co",
+  anonKey: "sb_publishable_eRvwUkoqMNtX7xHTa_w-sQ_5IeedVRV"
 };
