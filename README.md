@@ -1,20 +1,36 @@
 # G4 Asistent
 
-Preprosta mobilna spletna aplikacija za osebne ocene. Registracija in prijava uporabljata samo **uporabniško ime in geslo**, brez Supabase Auth in brez e-poštnih naslovov.
+Spletna aplikacija za beleženje ocen s prijavo z imenom in geslom, brez Supabase Auth.
 
-## Nastavitev
+## Namestitev – skupni Supabase projekt s Timeline
 
-1. V izbranem Supabase projektu odpri **SQL Editor** in zaženi celoten [schema.sql](schema.sql). Ustvari ločeni tabeli `g4_simple_users` in `g4_simple_grades` ter funkcijo `g4_simple_action`. Ni treba spreminjati nastavitev Authentication.
-2. URL in javni Supabase ključ sta že v [config.js](config.js).
-3. Na GitHubu odpri **Settings → Pages → Deploy from a branch → main → /(root)**. Stran bo na https://nick3go.github.io/g4asistent/.
-4. Ustvari račun z imenom in geslom. Račun ostane prijavljen do zaprtja zavihka/seje brskalnika oziroma odjave.
+**Pomembno:** zaženi samo [g4a-private.sql](g4a-private.sql), NE stare datoteke `schema.sql`. Nova SQL skripta ustvari lastno shemo `g4a_private` s tabelama `users` in `grades`, ter funkcijo `public.g4a_api()`. Ne uporablja in ne spreminja sheme `timeline_private`, funkcije `timeline_api` ali stare tabele `public.g4_grades`.
 
-## Opozorilo
+1. V projektu `ngtkrtabbxrwduleenwn` odpri **Supabase → SQL Editor → New query**.
+2. Kopiraj in izvedi vsebino [g4a-private.sql](g4a-private.sql).
+3. Preveri, da je skripta uspešna; nato omogoči GitHub Pages: **Settings → Pages → Deploy from branch → main → /(root)**.
+4. Odpri https://nick3go.github.io/g4asistent/ in ustvari testni račun.
 
-To je **namenoma poenostavljena prijava**, ne ustreza zaščiti pomembnih osebnih podatkov. Geslo je shranjeno kot navadno besedilo v podatkovni bazi in v sessionStorage brskalnika. Ne uporabi gesla, ki ga uporabljaš kje drugje. Javni odjemalec kliče eno SQL funkcijo, ki preverja ime in geslo; neposreden dostop anonimnih uporabnikov do tabel je onemogočen. Ni e-poštne potrditve, obnove gesla, omejevanja poskusov prijave ali napredne zaščite.
+URL in javni ključ sta že nastavljena v `config.js`. V Supabase Authentication ni treba nič spreminjati.
 
-Če si že izvedel starejšo različico schema.sql: novi objekti imajo drugačna imena in ne prepisujejo prejšnje tabele `g4_grades`. Stari podatki se ne prenesejo samodejno.
+### Preverjanje brez sprememb
 
-## Ocene in povprečja
+```sql
+select table_schema,table_name from information_schema.tables
+where table_schema in ('timeline_private','g4a_private','public')
+order by table_schema,table_name;
+```
 
-Ocena vsebuje datum, številčno oceno od 1 do 5, vrsto (pisno, ustno, izdelek), predmet in lastnika. Podprti so `slo, mat, fiz, ang, nem, rač, rso, ele, esi, psim, fizm, zgom, špo`. Predmetno povprečje je aritmetično povprečje ocen pri tem predmetu. Skupno povprečje je aritmetična sredina **nezaokroženih predmetnih povprečij** predmetov z vsaj eno oceno. Prikaz je na dve decimalki.
+V `timeline_private` morata ostati `events` in `settings`; v `g4a_private` se pojavita `users` in `grades`. V `public` se ohranijo obstoječe tabele.
+
+### Obstoječi podatki
+
+Če si izvedel samo **prvo** G4A skripto, obstaja `public.g4_grades`, ki je nova aplikacija ne uporablja. Namenoma je ne brišemo. Če si že ustvaril račune in ocene s prehodno `g4_simple_action`, se ti ne prenesejo samodejno; za migracijo teh podatkov pripravi ločen pregled in kopiranje, preden karkoli odstraniš.
+
+### Varnost in omejitve
+
+Za manj pomembne šolske podatke uporablja aplikacija preprosto primerjavo uporabniškega imena in gesla. Gesla so v trenutni poenostavljeni izvedbi **shranjena v navadnem besedilu** in začasno v `sessionStorage`. **Ne uporabljaj gesel, ki jih uporabljaš drugje.** Neposreden anonimni dostop do tabel je prepovedan; vse operacije tečejo prek `g4a_api` in preverijo uporabniško ime/geslo. To ni nadomestilo za pravi avtentikacijski sistem in ni primerno za občutljive osebne podatke.
+
+### Povprečja
+
+Podprti so predmeti `slo, mat, fiz, ang, nem, rač, rso, ele, esi, psim, fizm, zgom, špo`. Ocene so od 1 do 5, vrste so pisno, ustno in izdelek. Skupno povprečje je povprečje nezaokroženih povprečij **predmetov z ocenami**; prikaz je na dve decimalki.
