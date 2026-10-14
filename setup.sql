@@ -50,6 +50,19 @@ create table if not exists g4a_private.admin_settings (
  singleton boolean primary key default true check(singleton),
  password text not null
 );
+-- Podpora starejsi tabeli, ki je imela samo obvezni stolpec password_hash.
+alter table g4a_private.admin_settings add column if not exists password text;
+do $migration$
+begin
+ if exists (
+   select 1 from information_schema.columns
+   where table_schema='g4a_private' and table_name='admin_settings'
+     and column_name='password_hash'
+ ) then
+   alter table g4a_private.admin_settings alter column password_hash drop not null;
+ end if;
+end;
+$migration$;
 alter table g4a_private.admin_settings enable row level security;
 revoke all on g4a_private.admin_settings from public, anon, authenticated;
 create or replace function public.g4a_admin(p_password text,p_action text,p_data jsonb default '{}'::jsonb)
