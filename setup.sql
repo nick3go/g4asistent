@@ -130,6 +130,15 @@ begin
    ) into result;
    return result;
  end if;
+ if p_action='assessments' then
+   delete from g4a_private.assessments where date < current_date - 6;
+   return jsonb_build_object('ok',true,'items',coalesce((
+     select jsonb_agg(to_jsonb(a) order by a.date,a.id)
+     from (select id,subject,type,date from g4a_private.assessments
+       where class_name=(select class_name from g4a_private.users where id=uid)
+       and date>=current_date-6) a
+   ),'[]'::jsonb));
+ end if;
  if p_action='delete' then
    delete from g4a_private.grades where id=(p_data->>'id')::bigint and owner_id=uid;
    return jsonb_build_object('ok',found);
