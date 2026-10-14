@@ -63,6 +63,7 @@ begin
  return jsonb_build_object('ok',false,'message','Napačno geslo.'); end if;
  if p_action='login' then return jsonb_build_object('ok',true); end if;
  if p_action='list' then
+ delete from g4a_private.assessments where date < current_date - 6;
  return jsonb_build_object('ok',true,'items',coalesce((
  select jsonb_agg(to_jsonb(a) order by a.date desc,a.id desc) from
  (select id,class_name,subject,type,date from g4a_private.assessments where date>=current_date-6) a
@@ -113,6 +114,7 @@ begin
    return result;
  end if;
  if p_action='assessments' then
+ delete from g4a_private.assessments where date < current_date - 6;
  return jsonb_build_object('ok',true,'items',coalesce((
  select jsonb_agg(to_jsonb(a) order by a.date,a.id)
  from (select id,subject,type,date from g4a_private.assessments
@@ -160,6 +162,19 @@ end;
 $body$;
 revoke all on function public.g4a_api(text,text,text,jsonb) from public;
 grant execute on function public.g4a_api(text,text,text,jsonb) to anon, authenticated;
+
+-- Če je v projektu že omogočen pg_cron (Database -> Extensions -> pg_cron),
+-- vsak dan ob 00:10 UTC trajno odstrani ocenjevanja, starejša od 6 dni.
+do $schedule$
+begin
+ if exists(select 1 from pg_extension where extname='pg_cron') then
+   if not exists(select 1 from cron.job where jobname='g4a_assessment_cleanup') then
+     perform cron.schedule('g4a_assessment_cleanup','10 0 * * *',
+       'delete from g4a_private.assessments where date < current_date - 6');
+   end if;
+ end if;
+end;
+$schedule$;
 commit;
 
  then return jsonb_build_object('ok',false,'message','Preveri podatke.'); end if;
