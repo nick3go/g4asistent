@@ -33,3 +33,16 @@ Podstran `/statistika/` prikazuje statistiko **pisnih** ocen (vrsta `pisno`) vse
 Testi se združujejo po predmetu in datumih: od prvega datuma testa do zadnjega sta lahko največ **dva koledarska dneva razlike** (trije zaporedni dnevi). Vrstni red ocen in njihovih datumov je nepomemben; če isti dijak za isti predmet vnese več pisnih ocen v istem obdobju, se trenutno šteje vsak zapis. Popravljene ocene so iz statistike izključene, vključene so prvotne pisne ocene. Za vsak test se izračunajo povprečje, število ocen 1–5 in povprečni odstotek, kadar obstaja.
 
 **Nadgradnja obstoječe podatkovne baze:** po dodajanju statistike lahko v SQL Editorju ponovno zaženeš [setup.sql](setup.sql). Skripta uporablja `CREATE IF NOT EXISTS` in `CREATE OR REPLACE FUNCTION`, zato obstoječih računov in ocen ne izbriše. Posodobila bo `g4a_api` z dejanjem `class_stats` in se ne dotakne sheme `timeline_private`. Za novo namestitev zadošča en zagon iste datoteke.
+
+## Prihajajoča ocenjevanja in administracija
+
+- `/prihajajoca/`: prijavljeni uporabnik vidi samo ocenjevanja svojega razreda. Dan po datumu ocenjevanja se postavka premakne med pretekla ocenjevanja. Sedmi dan po datumu izgine iz prikaza in jo strežnik izbriše ob prvem naslednjem dostopu; če je na Supabase omogočen **pg_cron**, jo vsak dan odstrani tudi urnik ob 00:10 UTC.
+- `/admin/`: vpis novih ocenjevanj (predmet, vrsta: pisno/ustno/izdelek, datum in razred), pregled in brisanje.
+
+### Nastavitev na obstoječem projektu
+
+1. Znova zaženi **[setup.sql](setup.sql)** v Supabase SQL Editorju. Ohrani vse obstoječe podatke G4Asistenta in ne spreminja Timeline.
+2. V **zasebnem SQL Editorju** nastavi administratorsko geslo. Uporabi `insert into g4a_private.admin_settings(singleton,password_hash) values (true, extensions.crypt('TVOJE_GESLO', extensions.gen_salt('bf'))) on conflict (singleton) do update set password_hash=excluded.password_hash;` in namesto `TVOJE_GESLO` vstavi želeno geslo. **Te poizvedbe z resničnim geslom ne dodajaj na GitHub.** Geslo se preverja samo na strežniku. Pri ustvarjanju novega projekta je potrebna razširitev `pgcrypto` v shemi `extensions`, če še ni aktivna.
+3. Za samodejno čiščenje neodvisno od obiskov v Supabase pod **Database → Extensions** omogoči `pg_cron`, nato znova zaženi `setup.sql`. Če razširitve ne omogočiš, zastareli zapisi vseeno izginejo s strani in se izbrišejo ob naslednjem dostopu, ne pa nujno točno po sedmih dneh.
+
+**Opozorilo:** ta poenostavljena prijava ni ustrezna za zelo občutljive podatke; dijaki lahko vidijo razredna ocenjevanja samo ob pravilnem uporabniškem imenu in geslu. Geslo administratorja ni vključeno v javne datoteke.
