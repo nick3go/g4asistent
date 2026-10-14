@@ -36,7 +36,7 @@ Testi se združujejo po predmetu in datumih: od prvega datuma testa do zadnjega 
 
 ## Prihajajoča ocenjevanja in administracija
 
-- `/prihajajoca/`: prijavljeni uporabnik vidi samo ocenjevanja svojega razreda. Dan po datumu ocenjevanja se postavka premakne med pretekla ocenjevanja. Sedmi dan po datumu izgine iz prikaza in jo strežnik izbriše ob prvem naslednjem dostopu; če je na Supabase omogočen **pg_cron**, jo vsak dan odstrani tudi urnik ob 00:10 UTC.
+- `/ocenjevanja/`: prijavljeni uporabnik vidi samo ocenjevanja svojega razreda. Dan po datumu ocenjevanja se postavka premakne med pretekla ocenjevanja. Sedmi dan po datumu izgine iz prikaza in jo strežnik izbriše ob prvem naslednjem dostopu; če je na Supabase omogočen **pg_cron**, jo vsak dan odstrani tudi urnik ob 00:10 UTC.
 - `/admin/`: vpis novih ocenjevanj (predmet, vrsta: pisno/ustno/izdelek, datum in razred), pregled in brisanje.
 
 ### Nastavitev na obstoječem projektu
