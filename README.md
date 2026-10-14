@@ -10,7 +10,7 @@ Spletna redovalnica z imenom, geslom in poljubnim razredom (privzeto G4A). Ocene
 4. V GitHub **Settings → Pages** izberi **Deploy from a branch → main → /(root)** in odpri svojo domeno oziroma URL strani.
 5. Registriraj uporabnika z imenom, geslom in razredom.
 
-**Če je G4Asistent že nameščen in deluje, datoteke setup.sql NE izvajaj ponovno.** Ta datoteka je namenjena postavitvi nove aplikacije. Stare migracije so ohranjene v zgodovini Git in jih ni treba ponovno zaganjati. Obstoječa namestitev ostane nespremenjena.
+**Za obstoječo namestitev** lahko ponovno izvedeš \`setup.sql\`, ko je dodana nova funkcionalnost, na primer razredna statistika. Skripta je pripravljena tako, da ohrani obstoječe podatke. Pred posegi v produkcijski projekt je priporočljiva varnostna kopija.
 
 ## Varnost
 
@@ -25,3 +25,11 @@ Popravljena in prvotna ocena ostaneta obe vidni, pri predmetnem povprečju pa š
 ## Predmeti
 
 `slo`, `mat`, `ang`, `nem`, `fiz`, `rač`, `rso`, `ele`, `esi`, `špo`, `fizm`, `psim`, `zgom`.
+
+## Statistika razreda
+
+Podstran `/statistika/` prikazuje statistiko **pisnih** ocen (vrsta `pisno`) vseh uporabnikov, ki imajo enako vrednost polja `class_name` kot prijavljeni uporabnik. Razred je poljubno besedilo, zato se mora pri vseh dijakih ujemati (vključno z velikimi in malimi črkami). Brez prijave statistika ni dostopna. Na strani se ne prikazujejo imena uporabnikov.
+
+Testi se združujejo po predmetu in datumih: od prvega datuma testa do zadnjega sta lahko največ **dva koledarska dneva razlike** (trije zaporedni dnevi). Vrstni red ocen in njihovih datumov je nepomemben; če isti dijak za isti predmet vnese več pisnih ocen v istem obdobju, se trenutno šteje vsak zapis. Popravljene ocene so iz statistike izključene, vključene so prvotne pisne ocene. Za vsak test se izračunajo povprečje, število ocen 1–5 in povprečni odstotek, kadar obstaja.
+
+**Nadgradnja obstoječe podatkovne baze:** po dodajanju statistike lahko v SQL Editorju ponovno zaženeš [setup.sql](setup.sql). Skripta uporablja `CREATE IF NOT EXISTS` in `CREATE OR REPLACE FUNCTION`, zato obstoječih računov in ocen ne izbriše. Posodobila bo `g4a_api` z dejanjem `class_stats` in se ne dotakne sheme `timeline_private`. Za novo namestitev zadošča en zagon iste datoteke.
