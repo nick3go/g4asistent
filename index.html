@@ -43,6 +43,19 @@
 @media(max-width:600px){header{align-items:flex-start;flex-wrap:wrap}.top-right{flex-wrap:wrap;justify-content:flex-end}.top-right a{font-size:12px;padding:7px 9px}}
 .top-right #logout{font-size:13px;font-weight:650}
 .subjects{align-items:start}.subject{align-self:start}
+/* Mobile-only dashboard layout */
+@media(max-width:600px){
+ .summary{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:23px 0 32px}
+ .stat{padding:16px;min-width:0;border-radius:16px}
+ .stat:nth-child(3){grid-column:1/-1}
+ .stat span{display:block;font-size:12px;line-height:1.35;overflow-wrap:normal}
+ .stat strong{font-size:clamp(25px,7vw,33px);line-height:1.18;margin-top:10px}
+ .stat #failing-subjects{font-size:clamp(18px,5vw,26px)!important;line-height:1.35;overflow-wrap:normal;word-break:normal}
+ .hero h1{font-size:clamp(34px,9vw,43px)}
+ .top-right{justify-content:flex-start;gap:7px;width:100%}
+ header{gap:13px;margin-bottom:38px}
+ .subjects{grid-template-columns:minmax(0,1fr)}
+}
 </style></head><body>
 <div class="wrap"><header><div class="logo"><span class="brand-word"><span class="brand-prefix">G4</span><span class="brand-a">A</span>sistent</span><span class="muted">/ ocene</span></div><div class="top-right"><a id="upcoming-link" class="btn ghost hidden" href="./ocenjevanja/">Ocenjevanja</a><a id="statistics-link" class="btn ghost hidden" href="./statistika/">Statistika</a><span id="username" class="muted hidden"></span><button id="logout" class="btn ghost hidden">Odjava</button></div></header>
 <div id="setup" class="setup hidden">Povezava s podatkovno bazo še ni nastavljena. Navodila so v datoteki README.md.</div>
