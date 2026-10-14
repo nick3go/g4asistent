@@ -28,6 +28,17 @@
 .field-label{display:block;color:#cbd3e0;font-size:13px;font-weight:650;margin:15px 0 8px}.grade-scale{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;margin-top:8px}.grade-choice{position:relative;display:block;margin:0;cursor:pointer}.grade-choice input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}.grade-choice span{display:grid;place-items:center;min-height:46px;border:1px solid #343e50;border-radius:10px;background:#0e131d;font-size:18px;font-weight:700;color:#d4dbe8;transition:background .15s,border-color .15s}.grade-choice input:checked+span{background:var(--accent);border-color:var(--accent);color:#101522}.grade-choice input:focus-visible+span{outline:2px solid var(--accent);outline-offset:3px}.grade-choice:hover span{border-color:var(--accent)}
 .type-scale{display:flex;flex-direction:column;gap:6px;margin-top:8px}.type-scale .grade-choice span{font-size:14px;min-height:36px;font-weight:600}.type-scale .grade-choice{width:100%}
 .modal-card{width:min(100%,540px)}.form-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0 16px;align-items:start}.field-grade{grid-column:1/-1}.field-type{grid-column:1/-1}.type-scale{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.type-scale .grade-choice span{min-height:42px}.field-subject{grid-column:1/-1}.field-date{grid-column:1}.field-percent{grid-column:2}.form-grid .field-label,.form-grid label:not(.grade-choice){margin-top:17px}.grade-scale{gap:8px}.grade-choice span{min-height:46px}.form-grid input,.form-grid select{min-width:0}@media(max-width:420px){.modal-card{padding:20px}.form-grid{column-gap:10px}.type-scale{gap:5px}.type-scale .grade-choice span{font-size:13px}.grade-choice span{min-height:43px}}
+@media(max-width:600px){
+.modal{padding:12px}
+.modal-card{width:100%;max-width:450px;max-height:calc(100dvh - 24px);overflow-y:auto;padding:22px}
+.form-grid{grid-template-columns:minmax(0,1fr);column-gap:0}
+.field-grade,.field-type,.field-subject,.field-date,.field-percent{grid-column:1/-1;min-width:0}
+.form-grid input:not([type="radio"]):not([type="hidden"]),.form-grid select{width:100%;min-width:0;max-width:100%;box-sizing:border-box}
+.form-grid input[type="date"]{min-width:0;max-width:100%;display:block}
+.grade-scale{gap:5px}
+.type-scale{gap:5px}
+.actions{flex-wrap:wrap}
+}
 </style></head><body>
 <div class="wrap"><header><div class="logo"><span class="brand-word"><span class="brand-prefix">G4</span><span class="brand-a">A</span>sistent</span><span class="muted">/ ocene</span></div><div class="top-right"><span id="username" class="muted hidden"></span><button id="logout" class="btn ghost hidden">Odjava</button></div></header>
 <div id="setup" class="setup hidden">Povezava s podatkovno bazo še ni nastavljena. Navodila so v datoteki README.md.</div>
