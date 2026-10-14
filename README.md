@@ -42,7 +42,15 @@ Testi se združujejo po predmetu in datumih: od prvega datuma testa do zadnjega 
 ### Nastavitev na obstoječem projektu
 
 1. Znova zaženi **[setup.sql](setup.sql)** v Supabase SQL Editorju. Ohrani vse obstoječe podatke G4Asistenta in ne spreminja Timeline.
-2. Administratorsko geslo je preprost niz znakov, določen v funkciji `g4a_admin` v datoteki `setup.sql`. Trenutno je `v3g0v4`. Dodatne nastavitve gesla ali razširitve `pgcrypto` niso potrebne. To ni varna prijava, saj je geslo javno v repozitoriju.
+2. V Supabase SQL Editorju **zasebno** nastavi geslo (zamenjaj `TVOJE_NOVO_GESLO`):
+
+   ```sql
+   insert into g4a_private.admin_settings(singleton,password)
+   values (true, 'TVOJE_NOVO_GESLO')
+   on conflict (singleton) do update set password=excluded.password;
+   ```
+
+   Poizvedbe z resničnim geslom ne objavljaj na GitHubu. Geslo se primerja kot navaden niz, brez dodatnih razširitev.
 3. Za samodejno čiščenje neodvisno od obiskov v Supabase pod **Database → Extensions** omogoči `pg_cron`, nato znova zaženi `setup.sql`. Če razširitve ne omogočiš, zastareli zapisi vseeno izginejo s strani in se izbrišejo ob naslednjem dostopu, ne pa nujno točno po sedmih dneh.
 
-**Opozorilo:** ta poenostavljena prijava ni ustrezna za zelo občutljive podatke; dijaki lahko vidijo razredna ocenjevanja samo ob pravilnem uporabniškem imenu in geslu. Geslo administratorja je zapisano v javni datoteki `setup.sql`; vsakdo, ki vidi repozitorij, ga lahko prebere.
+**Opozorilo:** ta poenostavljena prijava ni ustrezna za zelo občutljive podatke; dijaki lahko vidijo razredna ocenjevanja samo ob pravilnem uporabniškem imenu in geslu. Geslo je v zasebni tabeli Supabase in ni več v aktualni javni kodi. Staro geslo je že bilo objavljeno v zgodovini Git, zato izberi novega. Ta prijava še vedno nima zaščite pred ugibanjem gesel.
