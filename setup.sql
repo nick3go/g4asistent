@@ -59,6 +59,20 @@ begin
    from (select id,owner_id,subject,type,value,date,percent,correction_of from g4a_private.grades where owner_id=uid) g;
    return result;
  end if;
+ if p_action='class_stats' then
+   -- Branje samo pisnih ocen istega razreda; brez imen, gesel ali ID uporabnikov.
+   select jsonb_build_object(
+     'class_name', (select class_name from g4a_private.users where id=uid),
+     'grades', coalesce((
+       select jsonb_agg(jsonb_build_object('subject',g.subject,'date',g.date,'value',g.value,'percent',g.percent) order by g.date,g.subject)
+       from g4a_private.grades g
+       join g4a_private.users student on student.id=g.owner_id
+       where student.class_name=(select self.class_name from g4a_private.users self where self.id=uid)
+         and g.type='pisno' and g.correction_of is null
+     ),'[]'::jsonb)
+   ) into result;
+   return result;
+ end if;
  if p_action='delete' then
    delete from g4a_private.grades where id=(p_data->>'id')::bigint and owner_id=uid;
    return jsonb_build_object('ok',found);
