@@ -45,13 +45,23 @@ create table if not exists g4a_private.assessments (
 create index if not exists g4a_assessments_class_date_idx on g4a_private.assessments(class_name,date);
 alter table g4a_private.assessments enable row level security;
 revoke all on g4a_private.assessments from public,anon,authenticated;
--- Administratorsko geslo se preverja z enostavno primerjavo nizov.
+-- Geslo se vnese posebej v zasebnem Supabase SQL Editorju in ne sme biti v repozitoriju.
+create table if not exists g4a_private.admin_settings (
+ singleton boolean primary key default true check(singleton),
+ password text not null
+);
+alter table g4a_private.admin_settings enable row level security;
+revoke all on g4a_private.admin_settings from public, anon, authenticated;
 create or replace function public.g4a_admin(p_password text,p_action text,p_data jsonb default '{}'::jsonb)
 returns jsonb language plpgsql security definer set search_path=''
 as $admin$
-declare chosen_id bigint;
+declare chosen_id bigint; expected_password text;
 begin
- if coalesce(p_password,'') <> 'v3g0v4' then
+ select password into expected_password from g4a_private.admin_settings where singleton=true;
+ if expected_password is null then
+   return jsonb_build_object('ok',false,'message','Administratorsko geslo še ni nastavljeno.');
+ end if;
+ if coalesce(p_password,'') <> expected_password then
    return jsonb_build_object('ok',false,'message','Napačno geslo.');
  end if;
  if p_action='login' then return jsonb_build_object('ok',true); end if;
