@@ -23,6 +23,7 @@ create table if not exists g4a_private.grades (
  value smallint not null check (value between 1 and 5),
  date date not null,
  percent numeric(5,2) check (percent between 0 and 100),
+ topic text check (char_length(topic) <= 160),
  correction_of bigint references g4a_private.grades(id) on delete set null,
  created_at timestamptz not null default now()
 );
@@ -129,7 +130,7 @@ begin
  if p_action='login' then return jsonb_build_object('ok',true); end if;
  if p_action='list' then
    select coalesce(jsonb_agg(to_jsonb(g) order by g.date desc,g.id desc),'[]'::jsonb) into result
-   from (select id,owner_id,subject,type,value,date,percent,correction_of from g4a_private.grades where owner_id=uid) g;
+   from (select id,owner_id,subject,type,value,date,percent,correction_of,topic from g4a_private.grades where owner_id=uid) g;
    return result;
  end if;
  if p_action='class_stats' then
@@ -172,6 +173,9 @@ begin
      if pct>100 then return jsonb_build_object('ok',false,'message','Procenti morajo biti med 0 in 100.'); end if;
    else pct := null;
    end if;
+   if char_length(coalesce(p_data->>'topic','')) > 160 then
+     return jsonb_build_object('ok',false,'message','Snov je predolga (največ 160 znakov).');
+   end if;
    correction:=nullif(p_data->>'correction_of','')::bigint;
    if p_action='insert' and correction is not null then
      if not exists(select 1 from g4a_private.grades original
@@ -180,12 +184,13 @@ begin
      then return jsonb_build_object('ok',false,'message','Neveljavna izvirna ocena.'); end if;
    end if;
    if p_action='insert' then
-     insert into g4a_private.grades(owner_id,subject,type,value,date,percent,correction_of)
-     values(uid,p_data->>'subject',p_data->>'type',(p_data->>'value')::smallint,(p_data->>'date')::date,pct,correction)
+     insert into g4a_private.grades(owner_id,subject,type,value,date,percent,correction_of,topic)
+     values(uid,p_data->>'subject',p_data->>'type',(p_data->>'value')::smallint,(p_data->>'date')::date,pct,correction,nullif(btrim(p_data->>'topic'),''))
      returning id into v_id;
    else
      update g4a_private.grades set subject=p_data->>'subject',type=p_data->>'type',
-     value=(p_data->>'value')::smallint,date=(p_data->>'date')::date,percent=pct
+     value=(p_data->>'value')::smallint,date=(p_data->>'date')::date,percent=pct,
+     topic=case when p_data ? 'topic' then nullif(btrim(p_data->>'topic'),'') else topic end
      where id=(p_data->>'id')::bigint and owner_id=uid returning id into v_id;
    end if;
    return jsonb_build_object('ok',v_id is not null);
