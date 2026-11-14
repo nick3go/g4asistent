@@ -18,7 +18,7 @@ Aplikacija uporablja namerno poenostavljen način prijave; gesla so v podatkovni
 
 ## Povprečja in ocene
 
-Ocena je od 1 do 5. Vrste so pisno, ustno in izdelek. Procenti so neobvezni. Ob vnosu jih JavaScript primerja z oceno: 1 (0–50), 2 (45–65), 3 (60–80), 4 (70–90), 5 (90–100). Strežnik preveri le interval 0–100; podrobnejša lestvica je namerno samo v odjemalcu.
+Ocena je od 1 do 5. Vrste so pisno, ustno in izdelek. Procenti in kratek opis snovi (največ 160 znakov) so neobvezni. Snov je vidna pri oceni ter jo lahko naknadno urediš. Ob vnosu jih JavaScript primerja z oceno: 1 (0–50), 2 (45–65), 3 (60–80), 4 (70–90), 5 (90–100). Strežnik preveri le interval 0–100; podrobnejša lestvica je namerno samo v odjemalcu.
 
 Popravljena in prvotna ocena ostaneta obe vidni, pri predmetnem povprečju pa šteje samo boljša. Skupno povprečje je srednja vrednost nezaokroženih povprečij predmetov z ocenami; prikaz je na dve decimalki.
 
